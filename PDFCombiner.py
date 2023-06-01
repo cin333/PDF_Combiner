@@ -3,7 +3,8 @@ import os
 import fitz
 import PySimpleGUI as sg
 
-# Reference: https://stackoverflow.com/questions/63725995/how-to-display-files-in-folder-when-using-pysimplegui-filebrowse-function
+# Reference 1: https://stackoverflow.com/questions/63725995/how-to-display-files-in-folder-when-using-pysimplegui-filebrowse-function
+# Reference 2: https://stackoverflow.com/questions/68929799/pysimplegui-right-justify-a-button-in-a-frame
 
 def PDF_combiner(foldername, name):
     # Change both for your own computer directory
@@ -23,7 +24,7 @@ sg.theme("NeutralBlue")
 font = ("Times New Roman", 9)
 
 layout_1 = [
-    [sg.Input(key="Folder_Directory", font=font), sg.Button('Browse Folders', key="FolderBrowse", font=font)],
+    [sg.Input(key="Folder_Directory", font=font, size=(40,10)), sg.Button('Browse Folders', key="FolderBrowse", font=font), sg.Button("Refresh", key="-REFRESH-", font=font)],
 
     [sg.Frame(
         layout = [
@@ -34,7 +35,7 @@ layout_1 = [
     )
     ],
    
-    [sg.Text("Combine These Folders?", font=font), sg.Button("Yes", font=font), sg.Button("Refresh", key="-REFRESH-", font=font), sg.Push(),sg.Exit(font=font)],    
+    [sg.Text("Combine These Folders?", font=font), sg.Button("Yes", font=font), sg.Push(),sg.Exit(font=font)],    
 ]
 
 layout_2 = [
