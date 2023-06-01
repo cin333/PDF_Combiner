@@ -24,17 +24,22 @@ sg.theme("NeutralBlue")
 layout_1 = [
     [sg.Input(key="Folder_Directory"), sg.Button('Browse Folders', key="FolderBrowse")],
 
-    [sg.Text('Files')],
+    [sg.Text('Files (Can Directly Edit and Adjust TextBox)')],
     [sg.Multiline(key='files', size=(60,20), autoscroll=True)],
     
-    [sg.Text("Combine These Folders?"), sg.Button("Yes"), sg.Button("No")],
+    [sg.Text("Combine These Folders?"), sg.Button("Yes"), sg.Button("No"), sg.Button("Edit")],
 
     [sg.Exit()],    
 ]
 
 layout_2 = [
-    [sg.Text("Enter Combined PDF Filename: "), sg.Input("Folder Name", do_not_clear=True), sg.Button("Enter", key="-ENTER-")], 
-    [sg.Button("Back", key="-BACK-")]
+    [sg.Text("Save in Folder: "), sg.Input(key="Folder_Directory_2"), sg.Button('Browse Folders', key="FolderBrowse_2")],
+    [sg.Text("Enter Combined PDF Filename: "), sg.Input("Folder Name", do_not_clear=True)],
+    [sg.Button("Save", key="-SAVE-"), sg.Button("Back", key="-BACK-")]
+]
+
+layout_3 = [
+
 ]
 
 
@@ -64,13 +69,18 @@ while True:
             window['files'].update("\n".join(filenames))
         window["Folder_Directory"].update(foldername)
     
-    elif event == 'Yes':
+    elif event == "FolderBrowse_2":
+        foldername = sg.PopupGetFolder('Select Folder', no_window=True)
+        print(foldername)
+        window["Folder_Directory_2"].update(foldername)
+    
+    elif event == 'Yes' and values['files'] != "":
         window[f'-COL{layout}-'].update(visible=False)
         layout = int(2)
         window[f'-COL{layout}-'].update(visible=True)
     
-    elif event == "-ENTER-":
-        PDF_combiner(foldername, values[1])
+    elif event == "-SAVE-":
+        PDF_combiner(foldername, values[0])
         window[f'-COL{layout}-'].update(visible=False)
         layout = int(1)
         window[f'-COL{layout}-'].update(visible=True)
@@ -80,6 +90,9 @@ while True:
         window[f'-COL{layout}-'].update(visible=False)
         layout = int(1)
         window[f'-COL{layout}-'].update(visible=True)
+    
+
+
         
             
 
