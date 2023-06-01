@@ -6,17 +6,16 @@ import PySimpleGUI as sg
 # Reference 1: https://stackoverflow.com/questions/63725995/how-to-display-files-in-folder-when-using-pysimplegui-filebrowse-function
 # Reference 2: https://stackoverflow.com/questions/68929799/pysimplegui-right-justify-a-button-in-a-frame
 
-def PDF_combiner(foldername_1, name, foldername_2):
+def PDF_combiner(foldername_1, filename, foldername_2):
     # Change both for your own computer directory
     directory = foldername_1
-
     result = fitz.open()
 
-    for pdf in os.listdir(directory):
-        with fitz.open(directory + "\\" + pdf) as mfile:
+    for pdf in directory:
+        with fitz.open(pdf) as mfile:
             result.insert_pdf(mfile)
 
-    result.save(foldername_2 + "\\" + name + ".pdf")
+    result.save(foldername_2 + "\\" + filename + ".pdf")
 
     return 
 
@@ -30,7 +29,7 @@ layout_1 = [
         layout = [
             [sg.Multiline(key='files', size=(60,20), autoscroll=True, font=font)]
                 ], 
-        title="Files (Can Directly Edit and Adjust TextBox)",
+        title="Files (Can Directly Edit and Order PDFs of TextBox)",
         font = font
     )
     ],
@@ -59,7 +58,6 @@ window = sg.Window('PDF Combiner', layout)
 layout = 1 # the currently visible layout
 while True:
     event, values = window.read()
-    filenames = "" # Empty for now
     print(event, values)
      
     if event is None or event == 'Exit' or event == 'Exit0':
@@ -86,11 +84,19 @@ while True:
         window[f'-COL{layout}-'].update(visible=True)
     
     elif event == "-SAVE-":
-        PDF_combiner(foldername_1, values[0], foldername_2)
+        final_list = []
+        pdf_list = values['files'].split("\n")
+        for i in pdf_list:
+            i = values['Folder_Directory'] + "/" + i
+            final_list.append(i)
+        PDF_combiner(final_list, values[0], foldername_2)
         window[f'-COL{layout}-'].update(visible=False)
         layout = int(1)
         window[f'-COL{layout}-'].update(visible=True)
         values[0] = 0
+
+        window["files"].update("")
+        window["Folder_Directory"].update("")
     
     elif event == "-BACK-":
         window[f'-COL{layout}-'].update(visible=False)
@@ -100,3 +106,4 @@ while True:
     elif event == "-REFRESH-":
         window["files"].update("")
         window["Folder_Directory"].update("")
+    
