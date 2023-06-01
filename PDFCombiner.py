@@ -6,9 +6,9 @@ import PySimpleGUI as sg
 # Reference 1: https://stackoverflow.com/questions/63725995/how-to-display-files-in-folder-when-using-pysimplegui-filebrowse-function
 # Reference 2: https://stackoverflow.com/questions/68929799/pysimplegui-right-justify-a-button-in-a-frame
 
-def PDF_combiner(foldername, name):
+def PDF_combiner(foldername_1, name, foldername_2):
     # Change both for your own computer directory
-    directory = foldername
+    directory = foldername_1
 
     result = fitz.open()
 
@@ -16,7 +16,7 @@ def PDF_combiner(foldername, name):
         with fitz.open(directory + "\\" + pdf) as mfile:
             result.insert_pdf(mfile)
 
-    result.save(directory + "\\" + name + ".pdf")
+    result.save(foldername_2 + "\\" + name + ".pdf")
 
     return 
 
@@ -67,18 +67,18 @@ while True:
         break
 
     elif event == 'FolderBrowse':
-        foldername = sg.PopupGetFolder('Select Folder', no_window=True)
-        print(foldername)
-        if foldername: # `None` when clicked `Cancel` - so I skip it
-            filenames = sorted(os.listdir(foldername))
+        foldername_1 = sg.PopupGetFolder('Select Folder', no_window=True)
+        print(foldername_1)
+        if foldername_1: # `None` when clicked `Cancel` - so I skip it
+            filenames = sorted(os.listdir(foldername_1))
             # it use `key='files'` to `Multiline` widget
             window['files'].update("\n".join(filenames))
-        window["Folder_Directory"].update(foldername)
+        window["Folder_Directory"].update(foldername_1)
     
     elif event == "FolderBrowse_2":
-        foldername = sg.PopupGetFolder('Select Folder', no_window=True)
-        print(foldername)
-        window["Folder_Directory_2"].update(foldername)
+        foldername_2 = sg.PopupGetFolder('Select Folder', no_window=True)
+        print(foldername_2)
+        window["Folder_Directory_2"].update(foldername_2)
     
     elif event == 'Yes' and values['files'] != "":
         window[f'-COL{layout}-'].update(visible=False)
@@ -86,7 +86,7 @@ while True:
         window[f'-COL{layout}-'].update(visible=True)
     
     elif event == "-SAVE-":
-        PDF_combiner(foldername, values[0])
+        PDF_combiner(foldername_1, values[0], foldername_2)
         window[f'-COL{layout}-'].update(visible=False)
         layout = int(1)
         window[f'-COL{layout}-'].update(visible=True)
@@ -100,9 +100,3 @@ while True:
     elif event == "-REFRESH-":
         window["files"].update("")
         window["Folder_Directory"].update("")
-    
-
-
-        
-            
-
