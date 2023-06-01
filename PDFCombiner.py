@@ -20,22 +20,27 @@ def PDF_combiner(foldername, name):
     return 
 
 sg.theme("NeutralBlue")
+font = ("Times New Roman", 9)
 
 layout_1 = [
-    [sg.Input(key="Folder_Directory"), sg.Button('Browse Folders', key="FolderBrowse")],
+    [sg.Input(key="Folder_Directory", font=font), sg.Button('Browse Folders', key="FolderBrowse", font=font)],
 
-    [sg.Text('Files (Can Directly Edit and Adjust TextBox)')],
-    [sg.Multiline(key='files', size=(60,20), autoscroll=True)],
-    
-    [sg.Text("Combine These Folders?"), sg.Button("Yes"), sg.Button("No"), sg.Button("Edit")],
-
-    [sg.Exit()],    
+    [sg.Frame(
+        layout = [
+            [sg.Multiline(key='files', size=(60,20), autoscroll=True, font=font)]
+                ], 
+        title="Files (Can Directly Edit and Adjust TextBox)",
+        font = font
+    )
+    ],
+   
+    [sg.Text("Combine These Folders?", font=font), sg.Button("Yes", font=font), sg.Button("Refresh", key="-REFRESH-", font=font), sg.Push(),sg.Exit(font=font)],    
 ]
 
 layout_2 = [
-    [sg.Text("Save in Folder: "), sg.Input(key="Folder_Directory_2"), sg.Button('Browse Folders', key="FolderBrowse_2")],
-    [sg.Text("Enter Combined PDF Filename: "), sg.Input("Folder Name", do_not_clear=True)],
-    [sg.Button("Save", key="-SAVE-"), sg.Button("Back", key="-BACK-")]
+    [sg.Text("Save in Folder: ", font=font), sg.Input(key="Folder_Directory_2", font=font), sg.Button('Browse Folders',font=font, key="FolderBrowse_2")],
+    [sg.Text("Enter Combined PDF Filename: ", font=font), sg.Input("Folder Name", do_not_clear=True, font=font), sg.Button("Save", key="-SAVE-", font=font)],
+    [sg.Button("Back", key="-BACK-", font=font), sg.Push()]
 ]
 
 layout_3 = [
@@ -47,7 +52,7 @@ layout = [
     [sg.Column(layout_1, key = '-COL1-'), sg.Column(layout_2, visible = False, key = '-COL2-')], 
           ]
 
-window = sg.Window('Test', layout)
+window = sg.Window('PDF Combiner', layout)
 
 
 layout = 1 # the currently visible layout
@@ -90,6 +95,10 @@ while True:
         window[f'-COL{layout}-'].update(visible=False)
         layout = int(1)
         window[f'-COL{layout}-'].update(visible=True)
+    
+    elif event == "-REFRESH-":
+        window["files"].update("")
+        window["Folder_Directory"].update("")
     
 
 
